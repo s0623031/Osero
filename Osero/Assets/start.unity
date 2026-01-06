@@ -507,7 +507,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Button
+  m_text: close
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -669,8 +669,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1758087672}
   m_HandleRect: {fileID: 1758087671}
   m_Direction: 0
-  m_Value: 0
-  m_Size: 1
+  m_Value: 1
+  m_Size: 0.99999994
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -1014,6 +1014,170 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: -20, y: -20}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &1078702598
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1078702599}
+  - component: {fileID: 1078702601}
+  - component: {fileID: 1078702600}
+  m_Layer: 5
+  m_Name: Text (TMP)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1078702599
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1078702598}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1715936868}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -0.025390625, y: 1368.5}
+  m_SizeDelta: {x: 7663, y: 3209.73}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1078702600
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1078702598}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_text: "\u30B2\u30FC\u30E0\u30EB\u30FC\u30EB\u8AAC\u660E\n1. \u30B2\u30FC\u30E0\u306E\u57FA\u672C\u6982\u8981\n\u2022   
+    \u3053\u306E\u30B2\u30FC\u30E0\u306F 1\u7AEF\u672B\u30672\u4EBA\u5BFE\u6226\u3059\u308B\u30AA\u30BB\u30ED\xD7\u97F3\u30B2\u30FC\u30E0\u3067\u3059\u3002\n\u2022   
+    1\u30BF\u30FC\u30F3\u306F\u6B21\u306E 3\u3064\u306E\u30D5\u30A7\u30FC\u30BA\u3067\u9032\u884C\u3057\u307E\u3059\uFF1A\n\u2460\u30AA\u30BB\u30ED\u30D5\u30A7\u30FC\u30BA
+    \u2192 \u2461\u97F3\u5F53\u3066\u30D5\u30A7\u30FC\u30BA \u2192 \u2462\u653B\u6483\u30D5\u30A7\u30FC\u30BA\n\u2022   
+    \u653B\u6483\u30D5\u30A7\u30FC\u30BA\u3067\u76F8\u624B\u306EHP\u30920\u306B\u3057\u305F\u30D7\u30EC\u30A4\u30E4\u30FC\u304C\u52DD\u5229\u3057\u307E\u3059\u3002\n\u2022   
+    \u30AA\u30BB\u30ED\u76E4\u304C\u57CB\u307E\u308A\u3001\u3069\u3061\u3089\u306EHP\u3082\u6B8B\u3063\u3066\u3044\u308B\u5834\u5408\u306F
+    HP\u304C\u591A\u3044\u65B9\u304C\u52DD\u3061\u3067\u3059\u3002\n________________________________________\n2.
+    \u30BF\u30FC\u30F3\u306E\u6D41\u308C\n\u2460 \u30AA\u30BB\u30ED\u30D5\u30A7\u30FC\u30BA\n1.   
+    \u901A\u5E38\u306E\u30AA\u30BB\u30ED\u3068\u540C\u3058\u30EB\u30FC\u30EB\u3067\u77F3\u3092\u7F6E\u304D\u307E\u3059\u3002\n2.   
+    \u7F6E\u3044\u305F\u5834\u6240\u304B\u3089\u30AA\u30BB\u30ED\u306E\u30EB\u30FC\u30EB\u306B\u5F93\u3063\u3066\u76F8\u624B\u306E\u77F3\u3092\u3072\u3063\u304F\u308A\u8FD4\u3057\u307E\u3059\u3002\n3.   
+    \u3072\u3063\u304F\u308A\u8FD4\u3057\u305F\u679A\u6570\u306B\u5FDC\u3058\u3066\u30101\u97F3\u3011\u304C\u9CF4\u308A\u307E\u3059\u3002\no   
+    \u97F3\u968E\u306F\u300C\u30C9\u301C\u30B7\u300D\u306E\u3044\u305A\u308C\u304B1\u97F3\u3002\no   
+    \u3069\u306E\u679A\u6570\u3067\u3069\u306E\u97F3\u968E\u304C\u9CF4\u308B\u304B\u306F\u30B2\u30FC\u30E0\u3054\u3068\u306B\u30E9\u30F3\u30C0\u30E0\u3002\u305F\u3060\u3057\u3001\u540C\u3058\u30B2\u30FC\u30E0\u5185\u3067\u306F\u56FA\u5B9A\u3002\n4.   
+    \u97F3\u304C\u9CF4\u3063\u305F\u3089 \u97F3\u5F53\u3066\u30D5\u30A7\u30FC\u30BA\u3078\u3002\n________________________________________\n\u2461
+    \u97F3\u5F53\u3066\u30D5\u30A7\u30FC\u30BA\n1.    \u30AA\u30BB\u30ED\u30D5\u30A7\u30FC\u30BA\u3067\u9CF4\u3063\u305F\u97F3\u968E\u3092\u5F53\u3066\u307E\u3059\u3002\n2.   
+    \u56DE\u7B54\u30C1\u30E3\u30F3\u30B9\u306F \u6700\u59273\u56DE\u3002\n3.    \u6B63\u89E3\u3059\u308B\u3068\u3001\u305D\u306E\u97F3\u968E\u304C
+    \u30D7\u30EC\u30A4\u30E4\u30FC\u306E\u624B\u6301\u3061\u97F3\u30B9\u30C8\u30C3\u30AF\u306B\u8FFD\u52A0\u3055\u308C\u307E\u3059\u3002\n4.   
+    \u4E0D\u6B63\u89E3\u306E\u5834\u5408\u3001\u305D\u306E\u9078\u3093\u3060\u97F3\u968E\u306E\u97F3\u304C\u300C\u30D2\u30F3\u30C8\u300D\u3068\u3057\u3066\u9CF4\u308A\u307E\u3059\u3002\n5.   
+    3\u56DE\u4E0D\u6B63\u89E3\u3059\u308B\u3068\u3001\u305D\u306E\u97F3\u968E\u306F
+    \u30B9\u30C8\u30C3\u30AF\u3055\u308C\u306A\u3044\u307E\u307E\u30D5\u30A7\u30FC\u30BA\u7D42\u4E86\u3002\n\u7D42\u4E86\u5F8C\u3001\u653B\u6483\u30D5\u30A7\u30FC\u30BA\u3078\u9032\u307F\u307E\u3059\u3002\n________________________________________\n\u2462
+    \u653B\u6483\u30D5\u30A7\u30FC\u30BA\n1.    \u81EA\u5206\u306E\u30B9\u30C8\u30C3\u30AF\u3057\u305F\u97F3\u3092\u7D44\u307F\u5408\u308F\u305B\u3066\u30B9\u30AD\u30EB\u52B9\u679C\u3092\u767A\u52D5\u3057\u307E\u3059\u3002\n2.   
+    \u7D44\u307F\u5408\u308F\u305B\u306B\u3088\u308A\u52B9\u679C\u304C\u5909\u308F\u308A\u307E\u3059\uFF08\u4E00\u4F8B\uFF09\uFF1A\no   
+    \u653B\u6483\u97F3\uFF1A\u76F8\u624B\u306B\u5927\u30C0\u30E1\u30FC\u30B8\no   
+    \u56DE\u5FA9\u97F3\uFF1A\u81EA\u5206\u306EHP\u3092\u56DE\u5FA9\no    \u9632\u5FA1\u97F3\uFF1A\u6B21\u30BF\u30FC\u30F3\u306E\u88AB\u30C0\u30E1\u30FC\u30B8\u3092\u8EFD\u6E1B\u30FB\u7121\u52B9\u5316\n3.   
+    \u4F7F\u7528\u3057\u305F\u97F3\u306F\u30B9\u30C8\u30C3\u30AF\u304B\u3089\u6D88\u8CBB\u3055\u308C\u307E\u3059\u3002\n\u653B\u6483\u30D5\u30A7\u30FC\u30BA\u304C\u7D42\u308F\u308B\u3068\u30BF\u30FC\u30F3\u7D42\u4E86\u3002\u76F8\u624B\u306E\u30BF\u30FC\u30F3\u3078\u79FB\u308A\u307E\u3059\u3002\n________________________________________\n3.
+    \u52DD\u5229\u6761\u4EF6\n\u2460 \u76F8\u624B\u306EHP\u30920\u306B\u3057\u305F\u3089\u52DD\u5229\n\u653B\u6483\u30D5\u30A7\u30FC\u30BA\u3067\u6709\u52B9\u306A\u97F3\u306E\u7D44\u307F\u5408\u308F\u305B\u3092\u6C7A\u3081\u3001\u76F8\u624B\u306B\u30C0\u30E1\u30FC\u30B8\u3092\u4E0E\u3048\u307E\u3057\u3087\u3046\u3002\n\u2461
+    \u76E4\u9762\u304C\u57CB\u307E\u3063\u305F\u6642\u70B9\u3067HP\u304C\u591A\u3044\u65B9\u306E\u52DD\u5229\n\u2022   
+    \u304A\u4E92\u3044\u306EHP\u304C\u6B8B\u3063\u3066\u3044\u308B\u72B6\u614B\u3067\u30AA\u30BB\u30ED\u304C\u3053\u308C\u4EE5\u4E0A\u7F6E\u3051\u306A\u304F\u306A\u3063\u305F\u5834\u5408\u3001\n\u305D\u306E\u6642\u70B9\u3067HP\u304C\u591A\u3044\u30D7\u30EC\u30A4\u30E4\u30FC\u304C\u52DD\u3061\u3068\u306A\u308A\u307E\u3059\u3002"
+  m_isRightToLeft: 0
+  m_fontAsset: {fileID: 11400000, guid: 51e99cb99c655d94db85a81158e7e5ac, type: 2}
+  m_sharedMaterial: {fileID: -8944604459453366361, guid: 51e99cb99c655d94db85a81158e7e5ac, type: 2}
+  m_fontSharedMaterials: []
+  m_fontMaterial: {fileID: 0}
+  m_fontMaterials: []
+  m_fontColor32:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+  m_enableVertexGradient: 0
+  m_colorMode: 3
+  m_fontColorGradient:
+    topLeft: {r: 1, g: 1, b: 1, a: 1}
+    topRight: {r: 1, g: 1, b: 1, a: 1}
+    bottomLeft: {r: 1, g: 1, b: 1, a: 1}
+    bottomRight: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColorGradientPreset: {fileID: 0}
+  m_spriteAsset: {fileID: 0}
+  m_tintAllSprites: 0
+  m_StyleSheet: {fileID: 0}
+  m_TextStyleHashCode: -1183493901
+  m_overrideHtmlColors: 0
+  m_faceColor:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontSize: 136.8
+  m_fontSizeBase: 136.8
+  m_fontWeight: 400
+  m_enableAutoSizing: 0
+  m_fontSizeMin: 18
+  m_fontSizeMax: 72
+  m_fontStyle: 0
+  m_HorizontalAlignment: 1
+  m_VerticalAlignment: 256
+  m_textAlignment: 65535
+  m_characterSpacing: 0
+  m_characterHorizontalScale: 1
+  m_wordSpacing: 0
+  m_lineSpacing: 0
+  m_lineSpacingMax: 0
+  m_paragraphSpacing: 0
+  m_charWidthMaxAdj: 0
+  m_TextWrappingMode: 1
+  m_wordWrappingRatios: 0.4
+  m_overflowMode: 0
+  m_linkedTextComponent: {fileID: 0}
+  parentLinkedComponent: {fileID: 0}
+  m_enableKerning: 0
+  m_ActiveFontFeatures: 6e72656b
+  m_enableExtraPadding: 0
+  checkPaddingRequired: 0
+  m_isRichText: 1
+  m_EmojiFallbackSupport: 1
+  m_parseCtrlCharacters: 1
+  m_isOrthographic: 1
+  m_isCullingEnabled: 0
+  m_horizontalMapping: 0
+  m_verticalMapping: 0
+  m_uvLineOffset: 0
+  m_geometrySortingOrder: 0
+  m_IsTextObjectScaleStatic: 0
+  m_VertexBufferAutoSizeReduction: 0
+  m_useMaxVisibleDescender: 1
+  m_pageToDisplay: 1
+  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_isUsingLegacyAnimationComponent: 0
+  m_isVolumetricText: 0
+  m_hasFontAssetChanged: 0
+  m_baseMaterial: {fileID: 0}
+  m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!222 &1078702601
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1078702598}
+  m_CullTransparentMesh: 1
 --- !u!1 &1140996942
 GameObject:
   m_ObjectHideFlags: 0
@@ -1171,8 +1335,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1140996944}
   m_HandleRect: {fileID: 1140996943}
   m_Direction: 2
-  m_Value: 0.9999997
-  m_Size: 0.5355499
+  m_Value: 0.00000062855605
+  m_Size: 0.5355498
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -1214,170 +1378,6 @@ CanvasRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1238854748}
-  m_CullTransparentMesh: 1
---- !u!1 &1551399395
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1551399396}
-  - component: {fileID: 1551399398}
-  - component: {fileID: 1551399397}
-  m_Layer: 5
-  m_Name: Text (TMP)
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &1551399396
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1551399395}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1715936868}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 8.5, y: 1545.2}
-  m_SizeDelta: {x: 7680, y: 3600}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1551399397
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1551399395}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_text: "\u30B2\u30FC\u30E0\u30EB\u30FC\u30EB\u8AAC\u660E\n1. \u30B2\u30FC\u30E0\u306E\u57FA\u672C\u6982\u8981\n\u2022   
-    \u3053\u306E\u30B2\u30FC\u30E0\u306F 1\u7AEF\u672B\u30672\u4EBA\u5BFE\u6226\u3059\u308B\u30AA\u30BB\u30ED\xD7\u97F3\u30B2\u30FC\u30E0\u3067\u3059\u3002\n\u2022   
-    1\u30BF\u30FC\u30F3\u306F\u6B21\u306E 3\u3064\u306E\u30D5\u30A7\u30FC\u30BA\u3067\u9032\u884C\u3057\u307E\u3059\uFF1A\n\u2460\u30AA\u30BB\u30ED\u30D5\u30A7\u30FC\u30BA
-    \u2192 \u2461\u97F3\u5F53\u3066\u30D5\u30A7\u30FC\u30BA \u2192 \u2462\u653B\u6483\u30D5\u30A7\u30FC\u30BA\n\u2022   
-    \u653B\u6483\u30D5\u30A7\u30FC\u30BA\u3067\u76F8\u624B\u306EHP\u30920\u306B\u3057\u305F\u30D7\u30EC\u30A4\u30E4\u30FC\u304C\u52DD\u5229\u3057\u307E\u3059\u3002\n\u2022   
-    \u30AA\u30BB\u30ED\u76E4\u304C\u57CB\u307E\u308A\u3001\u3069\u3061\u3089\u306EHP\u3082\u6B8B\u3063\u3066\u3044\u308B\u5834\u5408\u306F
-    HP\u304C\u591A\u3044\u65B9\u304C\u52DD\u3061\u3067\u3059\u3002\n________________________________________\n2.
-    \u30BF\u30FC\u30F3\u306E\u6D41\u308C\n\u2460 \u30AA\u30BB\u30ED\u30D5\u30A7\u30FC\u30BA\n1.   
-    \u901A\u5E38\u306E\u30AA\u30BB\u30ED\u3068\u540C\u3058\u30EB\u30FC\u30EB\u3067\u77F3\u3092\u7F6E\u304D\u307E\u3059\u3002\n2.   
-    \u7F6E\u3044\u305F\u5834\u6240\u304B\u3089\u30AA\u30BB\u30ED\u306E\u30EB\u30FC\u30EB\u306B\u5F93\u3063\u3066\u76F8\u624B\u306E\u77F3\u3092\u3072\u3063\u304F\u308A\u8FD4\u3057\u307E\u3059\u3002\n3.   
-    \u3072\u3063\u304F\u308A\u8FD4\u3057\u305F\u679A\u6570\u306B\u5FDC\u3058\u3066\u30101\u97F3\u3011\u304C\u9CF4\u308A\u307E\u3059\u3002\no   
-    \u97F3\u968E\u306F\u300C\u30C9\u301C\u30B7\u300D\u306E\u3044\u305A\u308C\u304B1\u97F3\u3002\no   
-    \u3069\u306E\u679A\u6570\u3067\u3069\u306E\u97F3\u968E\u304C\u9CF4\u308B\u304B\u306F\u30B2\u30FC\u30E0\u3054\u3068\u306B\u30E9\u30F3\u30C0\u30E0\u3002\u305F\u3060\u3057\u3001\u540C\u3058\u30B2\u30FC\u30E0\u5185\u3067\u306F\u56FA\u5B9A\u3002\n4.   
-    \u97F3\u304C\u9CF4\u3063\u305F\u3089 \u97F3\u5F53\u3066\u30D5\u30A7\u30FC\u30BA\u3078\u3002\n________________________________________\n\u2461
-    \u97F3\u5F53\u3066\u30D5\u30A7\u30FC\u30BA\n1.    \u30AA\u30BB\u30ED\u30D5\u30A7\u30FC\u30BA\u3067\u9CF4\u3063\u305F\u97F3\u968E\u3092\u5F53\u3066\u307E\u3059\u3002\n2.   
-    \u56DE\u7B54\u30C1\u30E3\u30F3\u30B9\u306F \u6700\u59273\u56DE\u3002\n3.    \u6B63\u89E3\u3059\u308B\u3068\u3001\u305D\u306E\u97F3\u968E\u304C
-    \u30D7\u30EC\u30A4\u30E4\u30FC\u306E\u624B\u6301\u3061\u97F3\u30B9\u30C8\u30C3\u30AF\u306B\u8FFD\u52A0\u3055\u308C\u307E\u3059\u3002\n4.   
-    \u4E0D\u6B63\u89E3\u306E\u5834\u5408\u3001\u305D\u306E\u9078\u3093\u3060\u97F3\u968E\u306E\u97F3\u304C\u300C\u30D2\u30F3\u30C8\u300D\u3068\u3057\u3066\u9CF4\u308A\u307E\u3059\u3002\n5.   
-    3\u56DE\u4E0D\u6B63\u89E3\u3059\u308B\u3068\u3001\u305D\u306E\u97F3\u968E\u306F
-    \u30B9\u30C8\u30C3\u30AF\u3055\u308C\u306A\u3044\u307E\u307E\u30D5\u30A7\u30FC\u30BA\u7D42\u4E86\u3002\n\u7D42\u4E86\u5F8C\u3001\u653B\u6483\u30D5\u30A7\u30FC\u30BA\u3078\u9032\u307F\u307E\u3059\u3002\n________________________________________\n\u2462
-    \u653B\u6483\u30D5\u30A7\u30FC\u30BA\n1.    \u81EA\u5206\u306E\u30B9\u30C8\u30C3\u30AF\u3057\u305F\u97F3\u3092\u7D44\u307F\u5408\u308F\u305B\u3066\u30B9\u30AD\u30EB\u52B9\u679C\u3092\u767A\u52D5\u3057\u307E\u3059\u3002\n2.   
-    \u7D44\u307F\u5408\u308F\u305B\u306B\u3088\u308A\u52B9\u679C\u304C\u5909\u308F\u308A\u307E\u3059\uFF08\u4E00\u4F8B\uFF09\uFF1A\no   
-    \u653B\u6483\u97F3\uFF1A\u76F8\u624B\u306B\u5927\u30C0\u30E1\u30FC\u30B8\no   
-    \u56DE\u5FA9\u97F3\uFF1A\u81EA\u5206\u306EHP\u3092\u56DE\u5FA9\no    \u9632\u5FA1\u97F3\uFF1A\u6B21\u30BF\u30FC\u30F3\u306E\u88AB\u30C0\u30E1\u30FC\u30B8\u3092\u8EFD\u6E1B\u30FB\u7121\u52B9\u5316\n3.   
-    \u4F7F\u7528\u3057\u305F\u97F3\u306F\u30B9\u30C8\u30C3\u30AF\u304B\u3089\u6D88\u8CBB\u3055\u308C\u307E\u3059\u3002\n\u653B\u6483\u30D5\u30A7\u30FC\u30BA\u304C\u7D42\u308F\u308B\u3068\u30BF\u30FC\u30F3\u7D42\u4E86\u3002\u76F8\u624B\u306E\u30BF\u30FC\u30F3\u3078\u79FB\u308A\u307E\u3059\u3002\n________________________________________\n3.
-    \u52DD\u5229\u6761\u4EF6\n\u2460 \u76F8\u624B\u306EHP\u30920\u306B\u3057\u305F\u3089\u52DD\u5229\n\u653B\u6483\u30D5\u30A7\u30FC\u30BA\u3067\u6709\u52B9\u306A\u97F3\u306E\u7D44\u307F\u5408\u308F\u305B\u3092\u6C7A\u3081\u3001\u76F8\u624B\u306B\u30C0\u30E1\u30FC\u30B8\u3092\u4E0E\u3048\u307E\u3057\u3087\u3046\u3002\n\u2461
-    \u76E4\u9762\u304C\u57CB\u307E\u3063\u305F\u6642\u70B9\u3067HP\u304C\u591A\u3044\u65B9\u306E\u52DD\u5229\n\u2022   
-    \u304A\u4E92\u3044\u306EHP\u304C\u6B8B\u3063\u3066\u3044\u308B\u72B6\u614B\u3067\u30AA\u30BB\u30ED\u304C\u3053\u308C\u4EE5\u4E0A\u7F6E\u3051\u306A\u304F\u306A\u3063\u305F\u5834\u5408\u3001\n\u305D\u306E\u6642\u70B9\u3067HP\u304C\u591A\u3044\u30D7\u30EC\u30A4\u30E4\u30FC\u304C\u52DD\u3061\u3068\u306A\u308A\u307E\u3059\u3002"
-  m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: efa0d17a230828a469d2d8d388aedf28, type: 2}
-  m_sharedMaterial: {fileID: 7326263688803173673, guid: efa0d17a230828a469d2d8d388aedf28, type: 2}
-  m_fontSharedMaterials: []
-  m_fontMaterial: {fileID: 0}
-  m_fontMaterials: []
-  m_fontColor32:
-    serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
-  m_enableVertexGradient: 0
-  m_colorMode: 3
-  m_fontColorGradient:
-    topLeft: {r: 1, g: 1, b: 1, a: 1}
-    topRight: {r: 1, g: 1, b: 1, a: 1}
-    bottomLeft: {r: 1, g: 1, b: 1, a: 1}
-    bottomRight: {r: 1, g: 1, b: 1, a: 1}
-  m_fontColorGradientPreset: {fileID: 0}
-  m_spriteAsset: {fileID: 0}
-  m_tintAllSprites: 0
-  m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: -1183493901
-  m_overrideHtmlColors: 0
-  m_faceColor:
-    serializedVersion: 2
-    rgba: 4294967295
-  m_fontSize: 263.4
-  m_fontSizeBase: 263.4
-  m_fontWeight: 400
-  m_enableAutoSizing: 0
-  m_fontSizeMin: 18
-  m_fontSizeMax: 72
-  m_fontStyle: 0
-  m_HorizontalAlignment: 1
-  m_VerticalAlignment: 256
-  m_textAlignment: 65535
-  m_characterSpacing: 0
-  m_characterHorizontalScale: 1
-  m_wordSpacing: 0
-  m_lineSpacing: 0
-  m_lineSpacingMax: 0
-  m_paragraphSpacing: 0
-  m_charWidthMaxAdj: 0
-  m_TextWrappingMode: 1
-  m_wordWrappingRatios: 0.4
-  m_overflowMode: 0
-  m_linkedTextComponent: {fileID: 0}
-  parentLinkedComponent: {fileID: 0}
-  m_enableKerning: 0
-  m_ActiveFontFeatures: 6e72656b
-  m_enableExtraPadding: 0
-  checkPaddingRequired: 0
-  m_isRichText: 1
-  m_EmojiFallbackSupport: 1
-  m_parseCtrlCharacters: 1
-  m_isOrthographic: 1
-  m_isCullingEnabled: 0
-  m_horizontalMapping: 0
-  m_verticalMapping: 0
-  m_uvLineOffset: 0
-  m_geometrySortingOrder: 0
-  m_IsTextObjectScaleStatic: 0
-  m_VertexBufferAutoSizeReduction: 0
-  m_useMaxVisibleDescender: 1
-  m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
-  m_isUsingLegacyAnimationComponent: 0
-  m_isVolumetricText: 0
-  m_hasFontAssetChanged: 0
-  m_baseMaterial: {fileID: 0}
-  m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!222 &1551399398
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1551399395}
   m_CullTransparentMesh: 1
 --- !u!1 &1591619464
 GameObject:
@@ -1643,12 +1643,12 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1551399396}
+  - {fileID: 1078702599}
   m_Father: {fileID: 1706884567}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.0009070226}
+  m_AnchoredPosition: {x: 0, y: 3107.3186}
   m_SizeDelta: {x: 0, y: 6690.32}
   m_Pivot: {x: 0, y: 1}
 --- !u!1 &1758087670
