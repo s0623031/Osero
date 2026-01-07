@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 3fe06ded7e53905429f1526a2a3526d2
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - emptySprite: {fileID: -9166882210053955540, guid: cef0633ff1c5024418823a9d8d018004, type: 3}
+  - blackSprite: {fileID: 1178266366242567254, guid: 08bdf40ea1c791946aad3932abe25ed1, type: 3}
+  - whiteSprite: {fileID: 681941336352461083, guid: 5c2ef472362155a4da8f9dec17f5f7ca, type: 3}
+  - turnText: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

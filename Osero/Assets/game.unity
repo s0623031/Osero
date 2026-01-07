@@ -1882,6 +1882,7 @@ GameObject:
   - component: {fileID: 508556650}
   - component: {fileID: 508556649}
   - component: {fileID: 508556648}
+  - component: {fileID: 508556651}
   m_Layer: 5
   m_Name: Panel
   m_TagString: Untagged
@@ -2034,6 +2035,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 508556646}
   m_CullTransparentMesh: 1
+--- !u!114 &508556651
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 508556646}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fe06ded7e53905429f1526a2a3526d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ReversiManager
+  emptySprite: {fileID: -9166882210053955540, guid: cef0633ff1c5024418823a9d8d018004, type: 3}
+  blackSprite: {fileID: 1178266366242567254, guid: 08bdf40ea1c791946aad3932abe25ed1, type: 3}
+  whiteSprite: {fileID: 681941336352461083, guid: 5c2ef472362155a4da8f9dec17f5f7ca, type: 3}
+  turnText: {fileID: 0}
 --- !u!1001 &521285474
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6160,7 +6177,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1898254070
 RectTransform:
   m_ObjectHideFlags: 0
