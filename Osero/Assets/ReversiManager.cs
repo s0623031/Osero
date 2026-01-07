@@ -5,6 +5,8 @@ using System.Linq;
 
 public class ReversiManager : MonoBehaviour
 {
+    public SoundQuiz soundQuiz;
+    public int turn = 0;
     [Header("画像設定")]
     [SerializeField] private Sprite emptySprite; // 石がない時の画像
     [SerializeField] private Sprite blackSprite; // 黒石の画像
@@ -103,8 +105,9 @@ public class ReversiManager : MonoBehaviour
             // 【追加】ひっくり返した枚数を取得
             int flipCount = flippableStones.Count;
 
-            // ★ここに追加しました
             Debug.Log($"ひっくり返した枚数: {flipCount}"); 
+            soundQuiz.sound(flipCount);
+            // 組合せフェーズ
             
             // GameManagerに枚数を渡して、次のフェーズ（Soundシーン）へ処理を委譲
             // ※今のところシーン移動させたくない場合はコメントアウトしてログだけ確認してください
@@ -123,6 +126,7 @@ public class ReversiManager : MonoBehaviour
     // 手番交代とパス・終了判定
     void ChangeTurn()
     {
+        turn = turn + 1;
         currentPlayer = -currentPlayer; // 1 -> -1, -1 -> 1
         UpdateTurnText();
 
