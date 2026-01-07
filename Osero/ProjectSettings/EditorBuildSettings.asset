@@ -13,7 +13,10 @@ EditorBuildSettings:
     guid: 1f297c7f856598f4b8d9ebd5186c553a
   - enabled: 1
     path: Assets/game.unity
-    guid: dcd82dbcc3bc4c14d842d91867634c1c
+    guid: 407738fa32e0a2e489ae5993832fc14e
+  - enabled: 1
+    path: Assets/rule.unity
+    guid: 566cc425816325145b683b67364b5d2b
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0
