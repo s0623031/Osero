@@ -4365,7 +4365,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 975, y: 0}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &990610467
@@ -4969,9 +4969,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4bf19caf822c13242a73142f7adf4692, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
+  MaxHP: 100
   BlackHP: 100
   WhiteHP: 100
-  MaxHP: 100
   BlackStock: []
   WhiteStock: []
   BlackShield: 0
@@ -7254,13 +7254,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CombinationManager
   reversiManager: {fileID: 0}
+  gameManager: {fileID: 0}
   combinationPanel: {fileID: 0}
-  blackHPSlider: {fileID: 0}
-  whiteHPSlider: {fileID: 0}
-  stockButtonContainer: {fileID: 0}
-  stockButtonPrefab: {fileID: 0}
-  infoText: {fileID: 0}
-  executeButton: {fileID: 0}
+  attackButton: {fileID: 0}
+  statusText: {fileID: 0}
+  blackHpSlider: {fileID: 1953230362}
+  whiteHpSlider: {fileID: 552979004}
 --- !u!1001 &1544083827
 PrefabInstance:
   m_ObjectHideFlags: 0
