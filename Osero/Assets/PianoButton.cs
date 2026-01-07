@@ -2,11 +2,12 @@ using UnityEngine;
 
 public class PianoButton : MonoBehaviour
 {
-
+    public SoundQuiz soundQuiz;
     public int ScaleNo;
 
-    void OnPianoClicked(){
-        
+    public void OnPianoClicked(){
+        int NoteChoiced = (ScaleNo - 1) % 7;
+        soundQuiz.piano(NoteChoiced);
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created

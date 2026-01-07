@@ -13,7 +13,7 @@ public class SoundQuiz : MonoBehaviour
 
 
 
-    public void Quiz(){
+    public void sound(){
         if(TurnCount <= 0){
             Debug.Log("返した数が不正です！");
             return;
@@ -22,7 +22,8 @@ public class SoundQuiz : MonoBehaviour
         audioSource.PlayOneShot(pianoClips[(int)note]);
         
     }
-    public void piano(){
+    public void piano(int NoteChoiced){
+        audioSource.PlayOneShot(pianoClips[(int)NoteChoiced]);
         
     }
     
