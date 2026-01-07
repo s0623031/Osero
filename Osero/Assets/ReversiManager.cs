@@ -1,30 +1,37 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
-using System.Linq;
 
 public class ReversiManager : MonoBehaviour
 {
+    [Header("外部スクリプト参照")]
     public SoundQuiz soundQuiz;
-    public int turn = 0;
+    public CombinationManager combinationManager;
+
     [Header("画像設定")]
-    [SerializeField] private Sprite emptySprite; // 石がない時の画像
-    [SerializeField] private Sprite blackSprite; // 黒石の画像
-    [SerializeField] private Sprite whiteSprite; // 白石の画像
+    [SerializeField] private Sprite emptySprite;
+    [SerializeField] private Sprite blackSprite;
+    [SerializeField] private Sprite whiteSprite;
 
     [Header("UI設定")]
-    [SerializeField] private Text turnText;      // (任意)手番を表示するテキスト
+    [SerializeField] private Text turnText;
 
-    // 盤面の状態定数
+    // 定数
     private const int Empty = 0;
     private const int Black = 1;
     private const int White = -1;
 
-    private int[,] board = new int[8, 8]; // 盤面データ
-    private Button[] buttons;             // ボタンの配列
-    private int currentPlayer = Black;    // 現在のプレイヤー（最初は黒）
+    private int[,] board = new int[8, 8];
+    private Button[] buttons;
+    private int currentPlayer = Black; // 1:黒, -1:白
 
-    // 8方向のベクトル (上, 右上, 右, 右下, 下, 左下, 左, 左上)
+    // ★追加: 外部から現在のターン(0 or 1)を取得するためのプロパティ
+    // Black(1)なら0, White(-1)なら1を返す
+    public int CurrentTurnIndex => (currentPlayer == Black) ? 0 : 1;
+
+    // 連打防止・フェーズ管理用フラグ
+    private bool isInputActive = true;
+
     private readonly int[] dx = { 0, 1, 1, 1, 0, -1, -1, -1 };
     private readonly int[] dy = { -1, -1, 0, 1, 1, 1, 0, -1 };
 
@@ -33,122 +40,141 @@ public class ReversiManager : MonoBehaviour
         InitializeGame();
     }
 
-    // ゲームの初期化
     void InitializeGame()
     {
-        // 子要素のボタンを全て取得 (Hierarchyの順序に依存します)
         buttons = GetComponentsInChildren<Button>();
 
         if (buttons.Length != 64)
         {
-            Debug.LogError("ボタンの数が64個ではありません！現在: " + buttons.Length);
+            Debug.LogError("ボタン数が64ではありません: " + buttons.Length);
             return;
         }
 
-        // ボタンにクリックイベントを登録
         for (int i = 0; i < 64; i++)
         {
             int x = i % 8;
             int y = i / 8;
-            int index = i; // ローカル変数にキャプチャする
-
-            // 既存のリスナーを削除してから追加
+            int index = i;
             buttons[index].onClick.RemoveAllListeners();
             buttons[index].onClick.AddListener(() => OnCellClicked(x, y));
         }
 
-        // 盤面データの初期化
         for (int y = 0; y < 8; y++)
-        {
             for (int x = 0; x < 8; x++)
-            {
                 board[x, y] = Empty;
-            }
-        }
 
-        // 初期配置 (オセロの配置: 中央に白黒2つずつ)
-        // 配置: 左上(3,3)=白, 右上(4,3)=黒, 左下(3,4)=黒, 右下(4,4)=白
         board[3, 3] = White;
         board[4, 3] = Black;
         board[3, 4] = Black;
         board[4, 4] = White;
 
         currentPlayer = Black;
+        isInputActive = true;
         UpdateBoardUI();
         UpdateTurnText();
     }
 
-   // ボタンがクリックされた時の処理
+    // ボタンクリック時
     void OnCellClicked(int x, int y)
     {
-        // 既に石がある場所には置けない
-        if (board[x, y] != Empty) return;
+        // 入力禁止中（他のフェーズ中）なら無視
+        if (!isInputActive || board[x, y] != Empty) return;
 
-        // 石を置けるかチェックし、裏返せる石のリストを取得
         List<Vector2Int> flippableStones = GetFlippableStones(x, y, currentPlayer);
 
         if (flippableStones.Count > 0)
         {
-            // 1. 石を置く
+            // --- 1. オセロフェーズ処理 ---
+            
+            // 石を置く・裏返す
             board[x, y] = currentPlayer;
-
-            // 2. 裏返す
             foreach (var stone in flippableStones)
             {
                 board[stone.x, stone.y] = currentPlayer;
             }
-
-            // 画面更新
             UpdateBoardUI();
 
-            // ==========================================
-            // 【追加】ひっくり返した枚数を取得
             int flipCount = flippableStones.Count;
+            Debug.Log($"ひっくり返した枚数: {flipCount}");
 
-            Debug.Log($"ひっくり返した枚数: {flipCount}"); 
-            soundQuiz.sound(flipCount);
-            // 組合せフェーズ
-            
-            // GameManagerに枚数を渡して、次のフェーズ（Soundシーン）へ処理を委譲
-            // ※今のところシーン移動させたくない場合はコメントアウトしてログだけ確認してください
-            //GameManager.Instance.GoToSoundPhase(flipCount); 
-            // ==========================================
+            // ★重要: ここで入力をロックし、次のフェーズへ移行する
+            isInputActive = false;
 
-            // プレイヤー交代
-            ChangeTurn(); 
-        }
-        else
-        {
-            Debug.Log("そこには置けません");
+            // --- 2. 音当てフェーズへ移行 ---
+            // SoundQuiz側で音を鳴らし、クイズを開始してもらう
+            // ※SoundQuizには StartPhase(枚数) のようなメソッドを作って呼ぶ想定です
+            if (soundQuiz != null)
+            {
+                soundQuiz.sound(flipCount); // ここを soundQuiz.StartQuizPhase(flipCount); 等に改良推奨
+                // 今回は仮で、少し遅らせて組合せフェーズへ行かせます
+                // 実際はSoundQuizが正解/不正解した後にCombinationManagerを呼ぶべきです
+                
+                // ※SoundQuizの処理が終わったら CombinationManager.StartCombinationPhase() を呼ぶ流れ
+                // ここではデバッグ用に直接呼び出します（実際はSoundQuizから呼んでください）
+                Invoke("GoToCombinationPhase", 1.0f); 
+            }
+            else
+            {
+                // SoundQuizがない場合は直でターン交代
+                ProceedToNextTurn();
+            }
         }
     }
 
-    // 手番交代とパス・終了判定
-    void ChangeTurn()
+    // 音当てフェーズ → 組合せフェーズへのつなぎ（SoundQuizから呼ぶのを推奨）
+    public void GoToCombinationPhase()
     {
-        turn = turn + 1;
-        currentPlayer = -currentPlayer; // 1 -> -1, -1 -> 1
-        UpdateTurnText();
+        if (combinationManager != null)
+        {
+            combinationManager.StartCombinationPhase();
+        }
+        else
+        {
+            ProceedToNextTurn();
+        }
+    }
 
-        // 次のプレイヤーが置ける場所があるか確認
+    // --- 3. 全てのフェーズ終了後、次のターンへ進む処理 ---
+    // CombinationManagerから呼ばれる
+    public void ProceedToNextTurn()
+    {
+        // 勝敗チェック（HPが0になっていないか）
+        if (GameManager.Instance.BlackHP <= 0 || GameManager.Instance.WhiteHP <= 0)
+        {
+            Debug.Log("HPが0になりました。ゲーム終了");
+            ShowResult(); // 勝敗表示へ
+            return;
+        }
+
+        // プレイヤー交代
+        currentPlayer = -currentPlayer;
+        UpdateTurnText();
+        
+        // 入力ロック解除（次の人のオセロ開始）
+        isInputActive = true;
+
+        // パス判定
+        CheckPass();
+    }
+
+    void CheckPass()
+    {
         if (!CanPlayerMove(currentPlayer))
         {
             Debug.Log($"プレイヤー {(currentPlayer == Black ? "黒" : "白")} は置ける場所がありません。パスします。");
-            
-            // パス：相手に手番を戻す
             currentPlayer = -currentPlayer;
             UpdateTurnText();
 
-            // 相手も置けない場合はゲーム終了
             if (!CanPlayerMove(currentPlayer))
             {
-                Debug.Log("両者とも置ける場所がありません。ゲーム終了！");
+                Debug.Log("両者置けません。ゲーム終了");
                 ShowResult();
             }
         }
     }
 
-    // 指定したプレイヤーがどこかに置けるかチェック
+    // --- 以下、元のロジック維持 ---
+
     bool CanPlayerMove(int player)
     {
         for (int y = 0; y < 8; y++)
@@ -156,94 +182,79 @@ public class ReversiManager : MonoBehaviour
             for (int x = 0; x < 8; x++)
             {
                 if (board[x, y] == Empty)
-                {
                     if (GetFlippableStones(x, y, player).Count > 0) return true;
-                }
             }
         }
         return false;
     }
 
-    // 指定座標に置いた場合に裏返せる石のリストを取得
     List<Vector2Int> GetFlippableStones(int startX, int startY, int player)
     {
         List<Vector2Int> flippable = new List<Vector2Int>();
-
-        // 8方向をチェック
         for (int i = 0; i < 8; i++)
         {
             List<Vector2Int> potentialFlip = new List<Vector2Int>();
             int cx = startX + dx[i];
             int cy = startY + dy[i];
-
-            // 相手の石が続いている間ループ
             while (IsOnBoard(cx, cy) && board[cx, cy] == -player)
             {
                 potentialFlip.Add(new Vector2Int(cx, cy));
                 cx += dx[i];
                 cy += dy[i];
             }
-
-            // 相手の石の先に自分の石があれば、裏返し確定
             if (potentialFlip.Count > 0 && IsOnBoard(cx, cy) && board[cx, cy] == player)
             {
                 flippable.AddRange(potentialFlip);
             }
         }
-
         return flippable;
     }
 
-    // 盤面内かチェック
-    bool IsOnBoard(int x, int y)
-    {
-        return x >= 0 && x < 8 && y >= 0 && y < 8;
-    }
+    bool IsOnBoard(int x, int y) { return x >= 0 && x < 8 && y >= 0 && y < 8; }
 
-    // UIの更新（データに基づいて画像を変更）
     void UpdateBoardUI()
     {
         for (int i = 0; i < 64; i++)
         {
-            int x = i % 8;
-            int y = i / 8;
-            int state = board[x, y];
-
+            int state = board[i % 8, i / 8];
             Image img = buttons[i].GetComponent<Image>();
-            
             if (state == Empty) img.sprite = emptySprite;
             else if (state == Black) img.sprite = blackSprite;
             else if (state == White) img.sprite = whiteSprite;
         }
     }
 
-    // 手番表示の更新
     void UpdateTurnText()
     {
-        if (turnText != null)
-        {
-            turnText.text = (currentPlayer == Black) ? "黒の番" : "白の番";
-        }
+        if (turnText != null) turnText.text = (currentPlayer == Black) ? "黒の番" : "白の番";
     }
 
-    // 結果表示（コンソールに出力）
     void ShowResult()
     {
-        int blackCount = 0;
-        int whiteCount = 0;
-
-        foreach (int cell in board)
+        // HPによる判定を優先する場合
+        string winner = "";
+        if (GameManager.Instance.WhiteHP <= 0) winner = "黒の勝ち(KO)";
+        else if (GameManager.Instance.BlackHP <= 0) winner = "白の勝ち(KO)";
+        else
         {
-            if (cell == Black) blackCount++;
-            else if (cell == White) whiteCount++;
+            // 盤面の枚数判定
+            int blackCount = 0;
+            int whiteCount = 0;
+            foreach (int cell in board) {
+                if (cell == Black) blackCount++;
+                else if (cell == White) whiteCount++;
+            }
+            if (blackCount > whiteCount) winner = "黒の勝ち(枚数)";
+            else if (whiteCount > blackCount) winner = "白の勝ち(枚数)";
+            else winner = "引き分け";
+            
+            // HPが多い方を勝者にするルールならここに記述
+            if (GameManager.Instance.BlackHP > GameManager.Instance.WhiteHP) winner = "黒の勝ち(HP判定)";
+            else if (GameManager.Instance.WhiteHP > GameManager.Instance.BlackHP) winner = "白の勝ち(HP判定)";
         }
-
-        string winner;
-        if (blackCount > whiteCount) winner = "黒の勝ち";
-        else if (whiteCount > blackCount) winner = "白の勝ち";
-        else winner = "引き分け";
-
-        Debug.Log($"ゲーム終了！ 黒: {blackCount}, 白: {whiteCount} - {winner}");
-        if (turnText != null) turnText.text = $"{winner} (黒:{blackCount} 白:{whiteCount})";
+        
+        Debug.Log($"ゲーム終了！ {winner}");
+        if (turnText != null) turnText.text = winner;
+        isInputActive = false; // 操作不能にする
     }
 }
