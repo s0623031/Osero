@@ -25,7 +25,7 @@ public class ReversiManager : MonoBehaviour
     private Button[] buttons;
     private int currentPlayer = Black; // 1:黒, -1:白
 
-    // ★追加: 外部から現在のターン(0 or 1)を取得するためのプロパティ
+    // 外部から現在のターン(0 or 1)を取得するためのプロパティ
     // Black(1)なら0, White(-1)なら1を返す
     public int CurrentTurnIndex => (currentPlayer == Black) ? 0 : 1;
 
@@ -97,21 +97,15 @@ public class ReversiManager : MonoBehaviour
             int flipCount = flippableStones.Count;
             Debug.Log($"ひっくり返した枚数: {flipCount}");
 
-            // ★重要: ここで入力をロックし、次のフェーズへ移行する
+            // ★修正: ここで入力をロックする（他のフェーズが終わるまで操作不能）
             isInputActive = false;
 
             // --- 2. 音当てフェーズへ移行 ---
-            // SoundQuiz側で音を鳴らし、クイズを開始してもらう
-            // ※SoundQuizには StartPhase(枚数) のようなメソッドを作って呼ぶ想定です
             if (soundQuiz != null)
             {
-                soundQuiz.sound(flipCount); // ここを soundQuiz.StartQuizPhase(flipCount); 等に改良推奨
-                // 今回は仮で、少し遅らせて組合せフェーズへ行かせます
-                // 実際はSoundQuizが正解/不正解した後にCombinationManagerを呼ぶべきです
-                
-                // ※SoundQuizの処理が終わったら CombinationManager.StartCombinationPhase() を呼ぶ流れ
-                // ここではデバッグ用に直接呼び出します（実際はSoundQuizから呼んでください）
-                Invoke("GoToCombinationPhase", 1.0f); 
+                // SoundQuizを開始
+                // ※SoundQuiz側でクイズが終了したら、GoToCombinationPhaseを呼んでもらう流れ
+                soundQuiz.StartQuizPhase(flipCount);
             }
             else
             {
@@ -121,7 +115,7 @@ public class ReversiManager : MonoBehaviour
         }
     }
 
-    // 音当てフェーズ → 組合せフェーズへのつなぎ（SoundQuizから呼ぶのを推奨）
+    // 音当てフェーズ → 組合せフェーズへのつなぎ（SoundQuizから呼ばれる）
     public void GoToCombinationPhase()
     {
         if (combinationManager != null)
@@ -138,19 +132,22 @@ public class ReversiManager : MonoBehaviour
     // CombinationManagerから呼ばれる
     public void ProceedToNextTurn()
     {
-        // 勝敗チェック（HPが0になっていないか）
-        if (GameManager.Instance.BlackHP <= 0 || GameManager.Instance.WhiteHP <= 0)
+        // 勝敗チェック（GameManagerが存在するか確認）
+        if (GameManager.Instance != null)
         {
-            Debug.Log("HPが0になりました。ゲーム終了");
-            ShowResult(); // 勝敗表示へ
-            return;
+            if (GameManager.Instance.BlackHP <= 0 || GameManager.Instance.WhiteHP <= 0)
+            {
+                Debug.Log("HPが0になりました。ゲーム終了");
+                ShowResult(); 
+                return;
+            }
         }
 
         // プレイヤー交代
         currentPlayer = -currentPlayer;
         UpdateTurnText();
         
-        // 入力ロック解除（次の人のオセロ開始）
+        // ★修正: ここで初めてロックを解除し、次のプレイヤーが石を置けるようにする
         isInputActive = true;
 
         // パス判定
@@ -173,7 +170,7 @@ public class ReversiManager : MonoBehaviour
         }
     }
 
-    // --- 以下、元のロジック維持 ---
+    // --- 以下、ロジック ---
 
     bool CanPlayerMove(int player)
     {
@@ -231,13 +228,20 @@ public class ReversiManager : MonoBehaviour
 
     void ShowResult()
     {
-        // HPによる判定を優先する場合
         string winner = "";
-        if (GameManager.Instance.WhiteHP <= 0) winner = "黒の勝ち(KO)";
-        else if (GameManager.Instance.BlackHP <= 0) winner = "白の勝ち(KO)";
-        else
+
+        // GameManagerがある場合のみHP判定を行う
+        if (GameManager.Instance != null)
         {
-            // 盤面の枚数判定
+            if (GameManager.Instance.WhiteHP <= 0) winner = "黒の勝ち(KO)";
+            else if (GameManager.Instance.BlackHP <= 0) winner = "白の勝ち(KO)";
+            else if (GameManager.Instance.BlackHP > GameManager.Instance.WhiteHP) winner = "黒の勝ち(HP判定)";
+            else if (GameManager.Instance.WhiteHP > GameManager.Instance.BlackHP) winner = "白の勝ち(HP判定)";
+        }
+
+        // HP判定で勝敗が決まっていない（またはGameManagerがない）場合は枚数判定
+        if (string.IsNullOrEmpty(winner))
+        {
             int blackCount = 0;
             int whiteCount = 0;
             foreach (int cell in board) {
@@ -247,10 +251,6 @@ public class ReversiManager : MonoBehaviour
             if (blackCount > whiteCount) winner = "黒の勝ち(枚数)";
             else if (whiteCount > blackCount) winner = "白の勝ち(枚数)";
             else winner = "引き分け";
-            
-            // HPが多い方を勝者にするルールならここに記述
-            if (GameManager.Instance.BlackHP > GameManager.Instance.WhiteHP) winner = "黒の勝ち(HP判定)";
-            else if (GameManager.Instance.WhiteHP > GameManager.Instance.BlackHP) winner = "白の勝ち(HP判定)";
         }
         
         Debug.Log($"ゲーム終了！ {winner}");

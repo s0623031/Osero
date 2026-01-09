@@ -2,95 +2,88 @@ using UnityEngine;
 
 public class SoundQuiz : MonoBehaviour
 {
-    public enum Note
-    {
-        C, D, E, F, G, A, B
-    }
-
-    [SerializeField] public AudioClip[] pianoClips; // C, D, E, F, G, A, B の順
+    public ReversiManager reversiManager;
+    [SerializeField] public AudioClip[] pianoClips; 
     public AudioSource audioSource;
 
     private int[] randomNoteMapping;
-
-    // ★追加: 今回の正解の音（インデックス）を覚えておく変数
     private int currentCorrectIndex = -1; 
+    private int mistakeCount = 0;
+    private bool isQuizActive = false;
+    private const int MaxMistakes = 3;
 
-    void Start()
-    {
-        InitializeRandomMapping();
-    }
+    void Start() { InitializeRandomMapping(); }
 
     void InitializeRandomMapping()
     {
         randomNoteMapping = new int[7];
         for (int i = 0; i < 7; i++) randomNoteMapping[i] = i;
-
-        // シャッフル
-        for (int i = 0; i < randomNoteMapping.Length; i++)
-        {
+        for (int i = 0; i < randomNoteMapping.Length; i++) {
             int temp = randomNoteMapping[i];
-            int randomIndex = Random.Range(0, randomNoteMapping.Length);
-            randomNoteMapping[i] = randomNoteMapping[randomIndex];
-            randomNoteMapping[randomIndex] = temp;
+            int r = Random.Range(0, randomNoteMapping.Length);
+            randomNoteMapping[i] = randomNoteMapping[r];
+            randomNoteMapping[r] = temp;
         }
-        
-        // デバッグ用ログ
-        string mapLog = "今回の音階ルール: ";
-        string[] noteNames = { "C", "D", "E", "F", "G", "A", "B" };
-        for(int i=0; i<7; i++) mapLog += $"[{i+1}枚={noteNames[randomNoteMapping[i]]}] ";
-        Debug.Log(mapLog);
     }
 
-    // 問題の音を鳴らす（正解を確定させる）
-    public void sound(int TurnCount)
+    public void StartQuizPhase(int turnCount)
     {
-        if (TurnCount <= 0)
-        {
-            Debug.Log("返した数が不正です！");
-            return;
-        }
-
-        int baseIndex = (TurnCount - 1) % 7;
+        if (turnCount <= 0) return;
+        mistakeCount = 0;
+        isQuizActive = true;
         
-        // ランダムマップから正解のインデックスを取得
-        int randomizedIndex = randomNoteMapping[baseIndex];
+        int baseIndex = (turnCount - 1) % 7;
+        currentCorrectIndex = randomNoteMapping[baseIndex];
 
-        // ★ここで正解をクラス変数に保存しておく
-        currentCorrectIndex = randomizedIndex;
-
-        // 音を鳴らす
-        if (randomizedIndex < pianoClips.Length)
-        {
-            audioSource.PlayOneShot(pianoClips[randomizedIndex]);
-        }
+        if (currentCorrectIndex < pianoClips.Length)
+            audioSource.PlayOneShot(pianoClips[currentCorrectIndex]);
+        
+        Debug.Log($"クイズ開始(あと{MaxMistakes}回まで) 正解Index:{currentCorrectIndex}");
     }
 
-    // プレイヤーが回答ボタンを押した時の処理
+    // 互換用
+    public void sound(int c) => StartQuizPhase(c);
+
     public void piano(int NoteChoiced)
     {
-        // 1. 押されたボタンの音を鳴らす
-        if (NoteChoiced >= 0 && NoteChoiced < pianoClips.Length)
-        {
-            audioSource.PlayOneShot(pianoClips[(int)NoteChoiced]);
-        }
+        if (!isQuizActive) return;
 
-        // 2. 正誤判定
-        // sound() がまだ呼ばれていない（-1）場合は判定しない安全策を入れています
-        if (currentCorrectIndex == -1) 
-        {
-            Debug.Log("まだ出題されていません（sound関数を呼んでください）");
-            return;
-        }
+        // 音を鳴らす
+        if (NoteChoiced >= 0 && NoteChoiced < pianoClips.Length)
+            audioSource.PlayOneShot(pianoClips[NoteChoiced]);
 
         if (NoteChoiced == currentCorrectIndex)
         {
-            Debug.Log("正解");
-            // ここに正解時の処理（ストック追加など）を書く
+            Debug.Log("正解！");
+            // GameManagerにストック追加
+            GameManager.Instance.AddStock(reversiManager.CurrentTurnIndex, currentCorrectIndex);
+            
+            EndQuizAndProceed();
         }
         else
         {
-            Debug.Log("不正解");
-            // ここに不正解時の処理（ライフ減少など）を書く
+            mistakeCount++;
+            Debug.Log($"不正解！残り{MaxMistakes - mistakeCount}回");
+            if (mistakeCount >= MaxMistakes)
+            {
+                Debug.Log("失敗...");
+                EndQuizAndProceed();
+            }
         }
+    }
+
+    void EndQuizAndProceed()
+    {
+        isQuizActive = false;
+        currentCorrectIndex = -1;
+        
+        // ReversiManager経由で組合せフェーズへ
+        // 少しディレイを入れると自然です
+        Invoke("CallNextPhase", 1.0f);
+    }
+
+    void CallNextPhase()
+    {
+        reversiManager.GoToCombinationPhase();
     }
 }

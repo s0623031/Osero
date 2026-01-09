@@ -3,161 +3,98 @@ using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour
 {
-    // シングルトンインスタンス
     public static GameManager Instance { get; private set; }
 
-    [Header("基本設定")]
+    [Header("ゲーム設定")]
     public int MaxHP = 100;
-
-    [Header("現在のステータス (Inspector確認用)")]
     public int BlackHP;
     public int WhiteHP;
 
-    // ストック（音階を文字列 "C", "D", "E" などで管理）
-    public List<string> BlackStock = new List<string>();
-    public List<string> WhiteStock = new List<string>();
+    // 音のストック（0:黒, 1:白）
+    // Listの中身は 0=C, 1=D, ... 6=B とする
+    private List<int>[] noteStocks = new List<int>[2];
 
-    // 簡易防御フラグ（次のダメージを1回無効化）
-    public bool BlackShield = false;
-    public bool WhiteShield = false;
+    // 防御フラグ（次のターンのダメージを無効化など）
+    private bool[] isGuarding = new bool[2];
 
     void Awake()
     {
-        // シングルトンパターンの確立
-        if (Instance == null)
-        {
-            Instance = this;
-            // シーン遷移しても破壊されないようにする場合（必要に応じてコメントアウトを外す）
-            // DontDestroyOnLoad(gameObject);
-            
-            // ゲーム開始時の初期化
-            ResetGame();
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-    }
+        if (Instance == null) Instance = this;
+        else Destroy(gameObject);
 
-    /// <summary>
-    /// ゲームの状態をリセットします（再戦時などに使用）
-    /// </summary>
-    public void ResetGame()
-    {
+        // 初期化
         BlackHP = MaxHP;
         WhiteHP = MaxHP;
-        
-        BlackStock.Clear();
-        WhiteStock.Clear();
-        
-        BlackShield = false;
-        WhiteShield = false;
-
-        Debug.Log("GameManager: ゲーム状態をリセットしました。");
+        noteStocks[0] = new List<int>();
+        noteStocks[1] = new List<int>();
+        isGuarding[0] = false;
+        isGuarding[1] = false;
     }
 
-    // ---------------------------------------------------------
-    // ストック管理
-    // ---------------------------------------------------------
-
-    /// <summary>
-    /// ストックを追加します
-    /// </summary>
-    /// <param name="turnIndex">0:黒, 1:白</param>
-    /// <param name="note">音階名 (例: "C", "D")</param>
-    public void AddStock(int turnIndex, string note)
+    // --- ストック操作 ---
+    public void AddStock(int playerIndex, int noteIndex)
     {
-        if (turnIndex == 0)
+        noteStocks[playerIndex].Add(noteIndex);
+        Debug.Log($"Player {playerIndex} Stocked Note: {noteIndex}");
+    }
+
+    public List<int> GetStock(int playerIndex)
+    {
+        return noteStocks[playerIndex];
+    }
+
+    public void ClearStock(int playerIndex)
+    {
+        noteStocks[playerIndex].Clear();
+    }
+
+    // --- バトル操作 ---
+    public void ApplyDamage(int targetPlayerIndex, int damage)
+    {
+        // 防御判定
+        if (isGuarding[targetPlayerIndex])
         {
-            BlackStock.Add(note);
-            Debug.Log($"[Stock] 黒に {note} を追加 (計: {BlackStock.Count}個)");
+            Debug.Log($"Player {targetPlayerIndex} 防御！ダメージ無効化");
+            isGuarding[targetPlayerIndex] = false; // 防御は1回で解除などのルール
+            return;
         }
-        else
+
+        if (targetPlayerIndex == 0) BlackHP -= damage;
+        else WhiteHP -= damage;
+
+        // HPの下限
+        if (BlackHP < 0) BlackHP = 0;
+        if (WhiteHP < 0) WhiteHP = 0;
+    }
+
+    public void Heal(int playerIndex, int amount)
+    {
+        if (playerIndex == 0) BlackHP += amount;
+        else WhiteHP += amount;
+
+        if (BlackHP > MaxHP) BlackHP = MaxHP;
+        if (WhiteHP > MaxHP) WhiteHP = MaxHP;
+    }
+
+    public void SetGuard(int playerIndex, bool active)
+    {
+        isGuarding[playerIndex] = active;
+    }
+
+    // GameManager.cs のクラス内に追加
+
+    // --- ストック消費処理 ---
+    // 指定された音（リスト）を、プレイヤーのストックから削除する
+    public void ConsumeStock(int playerIndex, List<int> notesToConsume)
+    {
+        foreach (int note in notesToConsume)
         {
-            WhiteStock.Add(note);
-            Debug.Log($"[Stock] 白に {note} を追加 (計: {WhiteStock.Count}個)");
-        }
-    }
-
-    /// <summary>
-    /// 指定したプレイヤーの全ストックを取得します
-    /// </summary>
-    public List<string> GetStock(int turnIndex)
-    {
-        return (turnIndex == 0) ? BlackStock : WhiteStock;
-    }
-
-    /// <summary>
-    /// コンボ発動後などにストックを消費（クリア）します
-    /// </summary>
-    public void ClearStock(int turnIndex)
-    {
-        if (turnIndex == 0) BlackStock.Clear();
-        else WhiteStock.Clear();
-    }
-
-    // ---------------------------------------------------------
-    // バトル処理（ダメージ・回復・防御）
-    // ---------------------------------------------------------
-
-    /// <summary>
-    /// ダメージを与えます
-    /// </summary>
-    /// <param name="targetTurnIndex">ダメージを受ける側 (0:黒, 1:白)</param>
-    /// <param name="damage">ダメージ量</param>
-    public void ApplyDamage(int targetTurnIndex, int damage)
-    {
-        // 黒がダメージを受ける場合
-        if (targetTurnIndex == 0)
-        {
-            if (BlackShield)
+            // ストックの中にその音があれば1つだけ削除
+            if (noteStocks[playerIndex].Contains(note))
             {
-                BlackShield = false; // シールド消費
-                Debug.Log("黒はシールドで攻撃を防いだ！");
-                return;
+                noteStocks[playerIndex].Remove(note);
             }
-            BlackHP = Mathf.Max(0, BlackHP - damage);
-            Debug.Log($"黒に {damage} ダメージ！ 残りHP: {BlackHP}");
-        }
-        // 白がダメージを受ける場合
-        else
-        {
-            if (WhiteShield)
-            {
-                WhiteShield = false; // シールド消費
-                Debug.Log("白はシールドで攻撃を防いだ！");
-                return;
-            }
-            WhiteHP = Mathf.Max(0, WhiteHP - damage);
-            Debug.Log($"白に {damage} ダメージ！ 残りHP: {WhiteHP}");
         }
     }
-
-    /// <summary>
-    /// HPを回復します
-    /// </summary>
-    public void Heal(int turnIndex, int amount)
-    {
-        if (turnIndex == 0)
-        {
-            BlackHP = Mathf.Min(BlackHP + amount, MaxHP);
-            Debug.Log($"黒が {amount} 回復！ HP: {BlackHP}");
-        }
-        else
-        {
-            WhiteHP = Mathf.Min(WhiteHP + amount, MaxHP);
-            Debug.Log($"白が {amount} 回復！ HP: {WhiteHP}");
-        }
-    }
-
-    /// <summary>
-    /// シールドを付与します
-    /// </summary>
-    public void AddShield(int turnIndex)
-    {
-        if (turnIndex == 0) BlackShield = true;
-        else WhiteShield = true;
-        
-        Debug.Log($"{(turnIndex == 0 ? "黒" : "白")} にシールド付与！");
-    }
+    
 }
