@@ -75,17 +75,12 @@ public class SoundQuiz : MonoBehaviour
         isQuizActive = false;
         currentCorrectIndex = -1;
         
-        // ★追加：クイズが終了した時点でストックのUI表示を更新する
-        if (combinationManager != null)
-        {
-            combinationManager.RefreshStockDisplay();
-        }
-        else
-        {
-            // 設定されていない場合の予備（最新のメソッドに書き換え）
-            Object.FindFirstObjectByType<CombinationManager>()?.RefreshStockDisplay();
-        }
+        // ★削除またはコメントアウト：
+        // ここで呼ぶと、まだ「組み合わせフェーズ」のフラグが立つ前なので、
+        // ボタンが反応しない状態で生成されてしまう可能性があります。
+        // if (combinationManager != null) combinationManager.RefreshStockDisplay();
 
+        // 1秒待ってからフェーズ移行（プレイヤーが結果を確認する時間）
         Invoke("CallNextPhase", 1.0f);
     }
 
