@@ -145,6 +145,10 @@ public class ReversiManager : MonoBehaviour
 
         // プレイヤー交代
         currentPlayer = -currentPlayer;
+        if (combinationManager != null)
+        {
+            combinationManager.RefreshStockDisplay();
+        }
         UpdateTurnText();
         
         // ★修正: ここで初めてロックを解除し、次のプレイヤーが石を置けるようにする
