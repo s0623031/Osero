@@ -24,7 +24,7 @@ public class SoundQuiz : MonoBehaviour
     /// <summary>
     /// ゲーム開始時に「ひっくり返した枚数」と「鳴る音」の対応表をランダムに作成
     /// </summary>
-    void InitializeRandomMapping()
+    public void InitializeRandomMapping()
     {
         randomNoteMapping = new int[7];
         for (int i = 0; i < 7; i++) randomNoteMapping[i] = i;
@@ -36,6 +36,17 @@ public class SoundQuiz : MonoBehaviour
             randomNoteMapping[i] = randomNoteMapping[r];
             randomNoteMapping[r] = temp;
         }
+
+        // デバッグ用：今のマッピングを表示（コンソールで確認用）
+        string debugMsg = "新マッピング: ";
+        for(int i=0; i<randomNoteMapping.Length; i++) debugMsg += $"[{i+1}枚:{randomNoteMapping[i]}] ";
+        Debug.Log(debugMsg);
+    }
+
+    public void ShuffleMapping()
+    {
+        InitializeRandomMapping();
+        Debug.Log("音階と枚数の対応表が再シャッフルされました。");
     }
 
     /// <summary>

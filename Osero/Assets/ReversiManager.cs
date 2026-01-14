@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using TMPro; // ★これが必要
 
 public class ReversiManager : MonoBehaviour
 {
@@ -14,7 +15,7 @@ public class ReversiManager : MonoBehaviour
     [SerializeField] private Sprite whiteSprite;
 
     [Header("UI設定")]
-    [SerializeField] private Text turnText;
+    [SerializeField] private TextMeshProUGUI turnText;
 
     // 定数
     private const int Empty = 0;
@@ -97,6 +98,13 @@ public class ReversiManager : MonoBehaviour
             int flipCount = flippableStones.Count;
             Debug.Log($"ひっくり返した枚数: {flipCount}");
 
+            // ★追加：全滅チェック
+            if (IsTotalDefeat())
+            {
+                ShowResult(); // 既存の関数を呼び出す
+                return; // 音当てフェーズへ行かずに終了
+            }
+
             // ★修正: ここで入力をロックする（他のフェーズが終わるまで操作不能）
             isInputActive = false;
 
@@ -113,6 +121,19 @@ public class ReversiManager : MonoBehaviour
                 ProceedToNextTurn();
             }
         }
+    }
+
+    // どちらかの色が消えたか判定するヘルパー関数
+    bool IsTotalDefeat()
+    {
+        int blackCount = 0;
+        int whiteCount = 0;
+        foreach (int cell in board)
+        {
+            if (cell == Black) blackCount++;
+            else if (cell == White) whiteCount++;
+        }
+        return (blackCount == 0 || whiteCount == 0);
     }
 
     // 音当てフェーズ → 組合せフェーズへのつなぎ（SoundQuizから呼ばれる）
@@ -161,6 +182,21 @@ public class ReversiManager : MonoBehaviour
 
         // パス判定
         CheckPass();
+    }
+
+    public void SetStatus(string message)
+    {
+        if (turnText != null)
+        {
+            // currentPlayer が 1(Black) なら "黒"、 -1(White) なら "白"
+            string colorStr = (currentPlayer == Black) ? "黒" : "白"; 
+            
+            // メッセージを表示
+            turnText.text = $"【{colorStr}】{message}";
+            
+            // デバッグログを出して、呼ばれているか確認
+            Debug.Log($"StatusUpdate: {colorStr} - {message}");
+        }
     }
 
     void CheckPass()
@@ -231,9 +267,19 @@ public class ReversiManager : MonoBehaviour
     }
 
     void UpdateTurnText()
+{
+    if (turnText != null)
     {
-        if (turnText != null) turnText.text = (currentPlayer == Black) ? "黒の番" : "白の番";
+        // currentPlayer (1:黒, -1:白) に基づいて文字を決定
+        string colorStr = (currentPlayer == Black) ? "黒" : "白";
+        
+        // オセロを打つべきタイミングなので、表示を上書き更新する
+        turnText.text = $"{colorStr}の番";
+        
+        // デバッグ用（正しく呼ばれたか確認）
+        Debug.Log($"UpdateTurnText: {turnText.text}");
     }
+}
 
     void ShowResult()
     {
