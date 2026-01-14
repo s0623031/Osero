@@ -100,94 +100,79 @@ public class CombinationManager : MonoBehaviour
 
     void OnAttackButtonClicked()
     {
-        // --- 追加：二重押し防止 ---
-        if (attackButton != null)
-        {
-            attackButton.interactable = false; 
-        }
-        int currentPlayerIndex = reversiManager.CurrentTurnIndex; 
+        if (attackButton != null) attackButton.interactable = false;
+
+        int currentPlayerIndex = reversiManager.CurrentTurnIndex;
         int targetPlayerIndex = (currentPlayerIndex == 0) ? 1 : 0;
 
         // --- 1. 何も選択されていない時 ---
         if (selectedNotes.Count == 0)
         {
             reversiManager.SetStatus("何も選ばずにターンを終了します");
-            // ダメージを与えず、即座に次フェーズ（相手のターン）へ
             Invoke("EndCombinationPhase", 1.0f);
             return;
         }
 
-        // 選択された音を昇順に並び替える
         selectedNotes.Sort();
         string comboKey = string.Join(",", selectedNotes);
 
         int damage = 0;
         int healAmount = 0;
         string message = "";
-        bool shouldProceed = false; // フェーズを終了させて次へ進むかどうかのフラグ
+        bool shouldProceed = false;
 
-        // --- 2. 組み合わせ（コンボ）判定 ---
-        switch (comboKey)
+        // --- 2. 組み合わせ判定ロジックを整理 ---
+        if (comboKey == "0,2,4") // Cメジャー
         {
-            case "0,2,4": // ド・ミ・ソ
-                damage = 30;
-                message = "コンボ発動：Cメジャー！"; 
+            damage = 30;
+            message = "コンボ発動：Cメジャー！";
+            shouldProceed = true;
+        }
+        else if (comboKey == "1,3,5") // Dm
+        {
+            healAmount = 20;
+            message = "コンボ発動：Dm！回復！";
+            shouldProceed = true;
+        }
+        else if (selectedNotes.Count == 1) // 単音選択（シャッフル）
+        {
+            // SoundQuizが存在し、メソッドが正しく呼ばれるかチェック
+            if (soundQuiz != null)
+            {
+                soundQuiz.ShuffleMapping(); // ここでエラーが出ていないかConsoleを確認
+                message = "特殊効果：音階シャッフル！";
                 shouldProceed = true;
-                break;
-
-            case "1,3,5": // レ・ファ・ラ
-                healAmount = 20;
-                message = "コンボ発動：Dm！回復！";
-                shouldProceed = true;
-                break;
-
-            default:
-                // --- 3. 単音（どれでも1つだけ）の場合：シャッフル ---
-                if (selectedNotes.Count == 1)
-                {
-                    if (soundQuiz != null)
-                    {
-                        soundQuiz.ShuffleMapping();
-                        message = "特殊効果：音階シャッフル！";
-                        shouldProceed = true;
-                    }
-                }
-                // --- 4. コンボではない音階の組み合わせ（複数選択）の場合 ---
-                else
-                {
-                    message = "その組み合わせはありません";
-                    // ★重要：やり直しをさせる場合は、ボタンを再び押せるように戻す
-                    if (attackButton != null)
-                    {
-                        attackButton.interactable = true;
-                    }
-                    shouldProceed = false; // 次に進まず、選び直しをさせる
-                }
-                break;
+            }
+            else
+            {
+                message = "エラー：SoundQuizが見つかりません";
+                shouldProceed = false;
+            }
+        }
+        else // コンボでも単音でもない
+        {
+            message = "その組み合わせはありません";
+            shouldProceed = false;
         }
 
-        // メッセージを表示
+        // --- 3. 実行 ---
         reversiManager.SetStatus(message);
 
-        // --- 5. 処理の確定 ---
         if (shouldProceed)
         {
-            // ダメージや回復の適用
+            // 成功時の処理
             if (damage > 0) GameManager.Instance.ApplyDamage(targetPlayerIndex, damage);
             if (healAmount > 0) GameManager.Instance.Heal(currentPlayerIndex, healAmount);
 
-            // ストックを消費
             GameManager.Instance.ConsumeStock(currentPlayerIndex, selectedNotes);
             
-            // ★修正：メッセージを読ませるために少し待ってから終了させる
-            // これにより「特殊効果：音階シャッフル！」などが表示された状態で止まります
+            // シャッフル時もここを通る
             Invoke("EndCombinationPhase", 1.2f);
         }
         else
         {
-            // 「その組み合わせはありません」の場合は何もしない（ボタンを再度押せる状態を維持）
-            Debug.Log("無効な組み合わせのため、選択を待機します。");
-            reversiManager.SetStatus(message);
+            // 失敗時：ボタンを復帰させる
+            if (attackButton != null) attackButton.interactable = true;
         }
     }
 
