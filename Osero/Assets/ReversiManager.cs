@@ -143,13 +143,18 @@ public class ReversiManager : MonoBehaviour
             }
         }
 
-        // プレイヤー交代
+        // 1. プレイヤーを交代させる
         currentPlayer = -currentPlayer;
+
+        // 2. ターン表示テキストを更新
+        UpdateTurnText();
+
+        // 3. ★重要: プレイヤーが交代した後に、ストック表示を更新する
+        // これにより、次のターンのプレイヤーのストックに切り替わる
         if (combinationManager != null)
         {
             combinationManager.RefreshStockDisplay();
         }
-        UpdateTurnText();
         
         // ★修正: ここで初めてロックを解除し、次のプレイヤーが石を置けるようにする
         isInputActive = true;

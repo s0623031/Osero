@@ -31,31 +31,12 @@ public class CombinationManager : MonoBehaviour
         RefreshStockDisplay();
     }
 
-    // ★重要: ストック表示を更新する関数（ReversiManagerから交代時に呼ばれる）
+    // 引数なしのRefreshStockDisplayを、現在のターンに合わせて表示するように修正
     public void RefreshStockDisplay()
     {
-        // 既存のアイコンを削除
-        foreach (Transform child in stockContainer)
-        {
-            Destroy(child.gameObject);
-        }
-
-        // 現在のターンのプレイヤーのストックを取得
-        int playerIndex = (reversiManager.CurrentTurnIndex == 1) ? 0 : 1; // 0:黒, 1:白
-        List<int> currentStock = GameManager.Instance.GetStock(playerIndex);
-
-        foreach (int noteIndex in currentStock)
-        {
-            NoteUIItem newItem = Instantiate(noteItemPrefab, stockContainer);
-            newItem.Setup(noteIndex, this);
-
-            // ★ここで「攻撃フェーズ中のみ」ボタンを押せるように設定
-            Button btn = newItem.GetComponent<Button>();
-            if (btn != null)
-            {
-                btn.interactable = isAttackPhase; 
-            }
-        }
+        // ReversiManagerから現在のターン（操作権を持っているプレイヤー）を取得
+        int playerIndex = reversiManager.CurrentTurnIndex; 
+        UpdateStockUI(playerIndex);
     }
 
     // 攻撃フェーズ開始（SoundQuizから呼ばれる）
@@ -74,25 +55,28 @@ public class CombinationManager : MonoBehaviour
     // 混乱を避けるため名前を UpdateStockUI に変更（またはRefreshを書き換え）
     private void UpdateStockUI(int playerIndex)
     {
-        // 既存のアイコンを削除
+        // 1. 既存のアイコンを全て削除
         foreach (Transform child in stockContainer)
         {
             Destroy(child.gameObject);
         }
 
-        // 指定されたプレイヤーのストックを取得
+        // 2. GameManagerから指定プレイヤーの所持リストを取得
         List<int> currentStock = GameManager.Instance.GetStock(playerIndex);
 
+        // 3. プレハブを生成してリストを構築
         foreach (int noteIndex in currentStock)
         {
             NoteUIItem newItem = Instantiate(noteItemPrefab, stockContainer);
+            
+            // Setup内で、そのアイコンがどの音階(Index)か、及びこのマネージャーへの参照を渡す
             newItem.Setup(noteIndex, this);
 
-            // ★重要：isAttackPhaseがtrueの状態でここを通るので、
-            // 生成された瞬間にボタンがクリック可能になります。
+            // 4. フェーズ状態に応じてボタンのクリック可否を切り替え
             Button btn = newItem.GetComponent<Button>();
             if (btn != null)
             {
+                // 組み合わせフェーズ中のみ、音を選択（クリック）できる
                 btn.interactable = isAttackPhase; 
             }
         }

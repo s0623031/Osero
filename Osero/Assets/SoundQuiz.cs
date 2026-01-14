@@ -2,11 +2,13 @@ using UnityEngine;
 
 public class SoundQuiz : MonoBehaviour
 {
+    [Header("外部参照")]
     public ReversiManager reversiManager;
-    // CombinationManagerを直接参照するか、Findで取得するようにします
     public CombinationManager combinationManager; 
-    [SerializeField] public AudioClip[] pianoClips; 
     public AudioSource audioSource;
+
+    [Header("音源設定")]
+    [SerializeField] public AudioClip[] pianoClips; // 0:ド, 1:レ... 6:シ
 
     private int[] randomNoteMapping;
     private int currentCorrectIndex = -1; 
@@ -14,78 +16,115 @@ public class SoundQuiz : MonoBehaviour
     private bool isQuizActive = false;
     private const int MaxMistakes = 3;
 
-    void Start() { InitializeRandomMapping(); }
+    void Start() 
+    { 
+        InitializeRandomMapping(); 
+    }
 
+    /// <summary>
+    /// ゲーム開始時に「ひっくり返した枚数」と「鳴る音」の対応表をランダムに作成
+    /// </summary>
     void InitializeRandomMapping()
     {
         randomNoteMapping = new int[7];
         for (int i = 0; i < 7; i++) randomNoteMapping[i] = i;
+        
+        // シャッフル（フィッシャー・イェーツのシャッフル）
         for (int i = 0; i < randomNoteMapping.Length; i++) {
             int temp = randomNoteMapping[i];
-            int r = Random.Range(0, randomNoteMapping.Length);
+            int r = Random.Range(i, randomNoteMapping.Length);
             randomNoteMapping[i] = randomNoteMapping[r];
             randomNoteMapping[r] = temp;
         }
     }
 
-    public void StartQuizPhase(int turnCount)
+    /// <summary>
+    /// オセロフェーズ終了時に呼ばれ、クイズを開始する
+    /// </summary>
+    /// <param name="flipCount">ひっくり返した石の枚数</param>
+    public void StartQuizPhase(int flipCount)
     {
-        if (turnCount <= 0) return;
+        if (flipCount <= 0) 
+        {
+            // 0枚（通常ありえないが）の場合は即フェーズ移行
+            CallNextPhase();
+            return;
+        }
+
         mistakeCount = 0;
         isQuizActive = true;
         
-        int baseIndex = (turnCount - 1) % 7;
+        // 枚数に応じた音を決定（1枚=0番目, 2枚=1番目... 8枚=0番目...）
+        int baseIndex = (flipCount - 1) % 7;
         currentCorrectIndex = randomNoteMapping[baseIndex];
 
-        if (currentCorrectIndex < pianoClips.Length)
-            audioSource.PlayOneShot(pianoClips[currentCorrectIndex]);
+        // 正解の音を鳴らす
+        PlayNote(currentCorrectIndex);
         
-        Debug.Log($"クイズ開始(あと{MaxMistakes}回まで) 正解Index:{currentCorrectIndex}");
+        Debug.Log($"音当て開始! 正解音Index: {currentCorrectIndex} (枚数: {flipCount})");
     }
 
-    public void sound(int c) => StartQuizPhase(c);
-
-    public void piano(int NoteChoiced)
+    /// <summary>
+    /// プレイヤーが音階ボタン（ド〜シ）を押した時に呼ばれる
+    /// </summary>
+    /// <param name="noteChoiced">プレイヤーが選んだ音のIndex</param>
+    public void OnPianoButtonClicked(int noteChoiced)
     {
         if (!isQuizActive) return;
 
-        if (NoteChoiced >= 0 && NoteChoiced < pianoClips.Length)
-            audioSource.PlayOneShot(pianoClips[NoteChoiced]);
+        // 押された音を鳴らす（ヒント兼確認用）
+        PlayNote(noteChoiced);
 
-        if (NoteChoiced == currentCorrectIndex)
+        if (noteChoiced == currentCorrectIndex)
         {
-            Debug.Log("正解！");
+            Debug.Log("正解！ストックに追加します。");
+            // GameManagerにストックを追加（現在のターンプレイヤー）
             GameManager.Instance.AddStock(reversiManager.CurrentTurnIndex, currentCorrectIndex);
+            
+            // ★即座にUIを更新して、手に入れた音を見せる
+            if (combinationManager != null)
+            {
+                combinationManager.RefreshStockDisplay();
+            }
+
             EndQuizAndProceed();
         }
         else
         {
             mistakeCount++;
             Debug.Log($"不正解！残り{MaxMistakes - mistakeCount}回");
+
             if (mistakeCount >= MaxMistakes)
             {
-                Debug.Log("失敗...");
+                Debug.Log("失敗... 音は獲得できませんでした。");
                 EndQuizAndProceed();
             }
         }
     }
 
+    /// <summary>
+    /// クイズを終了し、少し待ってから組み合わせフェーズへ移行
+    /// </summary>
     void EndQuizAndProceed()
     {
         isQuizActive = false;
-        currentCorrectIndex = -1;
-        
-        // ★削除またはコメントアウト：
-        // ここで呼ぶと、まだ「組み合わせフェーズ」のフラグが立つ前なので、
-        // ボタンが反応しない状態で生成されてしまう可能性があります。
-        // if (combinationManager != null) combinationManager.RefreshStockDisplay();
-
-        // 1秒待ってからフェーズ移行（プレイヤーが結果を確認する時間）
-        Invoke("CallNextPhase", 1.0f);
+        // プレイヤーが結果を認識できるよう、1秒待機してから次へ
+        Invoke("CallNextPhase", 1.2f);
     }
 
     void CallNextPhase()
     {
         reversiManager.GoToCombinationPhase();
     }
+
+    private void PlayNote(int index)
+    {
+        if (index >= 0 && index < pianoClips.Length && audioSource != null)
+        {
+            audioSource.PlayOneShot(pianoClips[index]);
+        }
+    }
+
+    // エディタからの呼び出し用ショートカット（必要であれば）
+    public void piano(int c) => OnPianoButtonClicked(c);
 }
