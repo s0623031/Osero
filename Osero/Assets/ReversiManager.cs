@@ -17,6 +17,10 @@ public class ReversiManager : MonoBehaviour
     [Header("UI設定")]
     [SerializeField] private TextMeshProUGUI turnText;
 
+    [Header("リザルトUI設定")]
+    [SerializeField] private GameObject resultPanel; // ゲーム終了時に表示するパネル
+    [SerializeField] private TextMeshProUGUI resultText; // 勝利メッセージを表示するテキスト
+
     // 定数
     private const int Empty = 0;
     private const int Black = 1;
@@ -303,13 +307,28 @@ public class ReversiManager : MonoBehaviour
                 if (cell == Black) blackCount++;
                 else if (cell == White) whiteCount++;
             }
-            if (blackCount > whiteCount) winner = "黒の勝ち(枚数)";
-            else if (whiteCount > blackCount) winner = "白の勝ち(枚数)";
+            if (blackCount > whiteCount) winner = "黒の勝ち";
+            else if (whiteCount > blackCount) winner = "白の勝ち";
             else winner = "引き分け";
         }
         
         Debug.Log($"ゲーム終了！ {winner}");
-        if (turnText != null) turnText.text = winner;
+
+        // リザルト専用テキストがある場合、それを表示
+        if (resultText != null)
+        {
+            resultText.text = winner;
+        }
+
+        // リザルトパネル（背景など）がある場合、それを活性化
+        if (resultPanel != null)
+        {
+            resultPanel.SetActive(true);
+        }
+
+        // 念のため、既存のturnTextにも表示
+        if (turnText != null) turnText.text = "GAME OVER";
+
         isInputActive = false; // 操作不能にする
     }
 }
