@@ -89,8 +89,9 @@ public class SoundQuiz : MonoBehaviour
         if (noteChoiced == currentCorrectIndex)
         {
             Debug.Log("正解！ストックに追加します。");
-            // GameManagerにストックを追加（現在のターンプレイヤー）
-            GameManager.Instance.AddStock(reversiManager.CurrentTurnIndex, currentCorrectIndex);
+            int player = reversiManager.CurrentTurnIndex;
+            GameManager.Instance.AddStock(player, currentCorrectIndex);
+            GameManager.Instance.AddStock(player, currentCorrectIndex);
             
             // ★即座にUIを更新して、手に入れた音を見せる
             if (combinationManager != null)
