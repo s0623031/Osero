@@ -122,37 +122,93 @@ public class CombinationManager : MonoBehaviour
         bool shouldProceed = false;
 
         // --- 2. 組み合わせ判定ロジックを整理 ---
-        if (comboKey == "0,2,4") // Cメジャー
+        // --- 2. 組み合わせ（コンボ）判定 ---
+        // まずは特定のコンボ（3つの音など）を優先的にチェック
+        switch (comboKey)
         {
-            damage = 30;
-            message = "コンボ発動：Cメジャー！";
-            shouldProceed = true;
-        }
-        else if (comboKey == "1,3,5") // Dm
-        {
-            healAmount = 20;
-            message = "コンボ発動：Dm！回復！";
-            shouldProceed = true;
-        }
-        else if (selectedNotes.Count == 1) // 単音選択（シャッフル）
-        {
-            // SoundQuizが存在し、メソッドが正しく呼ばれるかチェック
-            if (soundQuiz != null)
-            {
-                soundQuiz.ShuffleMapping(); // ここでエラーが出ていないかConsoleを確認
-                message = "特殊効果：音階シャッフル！";
+            case "0,1,2,3,4,5,6": // ド・レ・ミ・ファ・ソ・ラ・シ
+                damage = 100;
+                message = "コンボ発動：100ダメージ！"; 
                 shouldProceed = true;
+                break;
+            
+            case "0,2,4": // ド・ミ・ソ
+                damage = 50;
+                message = "コンボ発動：50ダメージ！"; 
+                shouldProceed = true;
+                break;
+
+            case "1,3,5": // レ・ファ・ラ
+                healAmount = 50;
+                message = "コンボ発動：Dm！50回復！";
+                shouldProceed = true;
+                break;
+
+            case "0,2": // ド・ミ
+                damage = 20;
+                message = "コンボ発動：20ダメージ！";
+                shouldProceed = true;
+                break;
+            
+            case "2,4": // ミ・ソ
+                damage = 20;
+                message = "コンボ発動：20ダメージ！";
+                shouldProceed = true;
+                break;
+
+            case "4,6": // ソ・シ
+                damage = 20;
+                message = "コンボ発動：20ダメージ！";
+                shouldProceed = true;
+                break;
+            
+            case "1,6": // シ・レ
+                damage = 10;
+                healAmount = 10;
+                message = "コンボ発動：Dm！10吸収！";
+                shouldProceed = true;
+                break;
+
+            case "1,3": // レ・ファ
+                healAmount = 20;
+                message = "コンボ発動：Dm！10回復！";
+                shouldProceed = true;
+                break;
+
+            case "3,5": // ファ・ラ
+                healAmount = 20;
+                message = "コンボ発動：Dm！10回復！";
+                shouldProceed = true;
+                break;
+
+            case "0,5": // ラ・ド
+                damage = 10;
+                healAmount = 10;
+                message = "コンボ発動：Dm！10吸収！";
+                shouldProceed = true;
+                break;
+
+            default:
+            // --- 3. コンボ以外の判定 ---
+            // --- 単音（どれでも1つだけ）の場合：シャッフル ---
+            if (selectedNotes.Count == 1)
+            {
+                if (soundQuiz != null)
+                {
+                    soundQuiz.ShuffleMapping();
+                    message = "特殊効果：音階シャッフル！";
+                    shouldProceed = true;
+                }
             }
+            // --- それ以外（コンボ未成立など） ---
             else
             {
-                message = "エラー：SoundQuizが見つかりません";
+                message = "その組み合わせはありません";
                 shouldProceed = false;
+                // やり直しのためにボタンを復活
+                if (attackButton != null) attackButton.interactable = true;
             }
-        }
-        else // コンボでも単音でもない
-        {
-            message = "その組み合わせはありません";
-            shouldProceed = false;
+            break;
         }
 
         // --- 3. 実行 ---
