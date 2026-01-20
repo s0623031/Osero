@@ -976,8 +976,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -104.3449, y: 140.37}
-  m_SizeDelta: {x: 778.6661, y: 873.86}
+  m_AnchoredPosition: {x: -261.43036, y: 137.66165}
+  m_SizeDelta: {x: 1092.8369, y: 868.4432}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &71234165
 MonoBehaviour:
@@ -1264,7 +1264,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -5585,7 +5585,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 0.7058824}
+  m_Color: {r: 0.42171642, g: 1, b: 0.36163503, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -8446,8 +8446,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -88.55681, y: 113.103}
-  m_SizeDelta: {x: 712.64, y: 819.32}
+  m_AnchoredPosition: {x: -255.12138, y: 127.99902}
+  m_SizeDelta: {x: 1045.7692, y: 849.1121}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1606289278
 MonoBehaviour:
@@ -8469,10 +8469,11 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u3010\u30B3\u30F3\u30DC\u4E00\u89A7\u3011\r\n\u266A \u30C9\u30FB\u30DF\u30FB\u30BD\n\u300030
-    \u30C0\u30E1\u30FC\u30B8\r\n\u266A \u30EC\u30FB\u30D5\u30A1\u30FB\u30E9\n\u300020
-    \u56DE\u5FA9\n\u266A \u97F3 2 \u3064\n\u300010 \u30C0\u30E1\u30FC\u30B8\r\n\u266A
-    \u97F3\uFF11\u3064\n\u3000\u97F3\u306E\u914D\u7F6E\u3092\u30B7\u30E3\u30C3\u30D5\u30EB"
+  m_text: "\u3010\u30B3\u30F3\u30DC\u4E00\u89A7\u3011\r\n\u266A \u97F3 2 \u3064\n\u300010
+    \u30C0\u30E1\u30FC\u30B8 (\u548C\u97F3\u306E\u7D44\u5408\u305B\u3067\u8FFD\u52A0\u30C0\u30E1\u30FC\u30B8or\u56DE\u5FA9)\n\u266A
+    \u97F3\uFF11\u3064\n\u3000\u97F3\u306E\u914D\u7F6E\u3092\u30B7\u30E3\u30C3\u30D5\u30EB\n\u266A
+    \u30C9\u30FB\u30DF\u30FB\u30BD\n\u300050 \u30C0\u30E1\u30FC\u30B8\r\n\u266A \u30EC\u30FB\u30D5\u30A1\u30FB\u30E9\n\u300050
+    \u56DE\u5FA9\n\u266A \u5168\u97F3\n\u3000100 \u30C0\u30E1\u30FC\u30B8\n"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 51e99cb99c655d94db85a81158e7e5ac, type: 2}
   m_sharedMaterial: {fileID: -8944604459453366361, guid: 51e99cb99c655d94db85a81158e7e5ac, type: 2}
@@ -8499,8 +8500,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 59.5
-  m_fontSizeBase: 59.5
+  m_fontSize: 48.82
+  m_fontSizeBase: 48.82
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
