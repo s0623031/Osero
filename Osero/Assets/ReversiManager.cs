@@ -270,20 +270,24 @@ public class ReversiManager : MonoBehaviour
         }
     }
 
-    void UpdateTurnText()
+void UpdateTurnText()
 {
     if (turnText != null)
     {
-        // currentPlayer (1:黒, -1:白) に基づいて文字を決定
+        // currentPlayer (1:黒, -1:白)
         string colorStr = (currentPlayer == Black) ? "黒" : "白";
-        
-        // オセロを打つべきタイミングなので、表示を上書き更新する
+
+        // テキスト更新
         turnText.text = $"{colorStr}の番";
-        
-        // デバッグ用（正しく呼ばれたか確認）
+
+        // 文字色を白に設定
+        turnText.color = Color.white;
+
+        // デバッグ
         Debug.Log($"UpdateTurnText: {turnText.text}");
     }
 }
+
 
     void ShowResult()
     {
