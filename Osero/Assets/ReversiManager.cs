@@ -271,64 +271,86 @@ public class ReversiManager : MonoBehaviour
     }
 
     void UpdateTurnText()
-{
-    if (turnText != null)
     {
-        // currentPlayer (1:黒, -1:白) に基づいて文字を決定
-        string colorStr = (currentPlayer == Black) ? "黒" : "白";
-        
-        // オセロを打つべきタイミングなので、表示を上書き更新する
-        turnText.text = $"{colorStr}の番";
-        
-        // デバッグ用（正しく呼ばれたか確認）
-        Debug.Log($"UpdateTurnText: {turnText.text}");
+        if (turnText != null)
+        {
+            // currentPlayer (1:黒, -1:白) に基づいて文字を決定
+            string colorStr = (currentPlayer == Black) ? "黒" : "白";
+            
+            // オセロを打つべきタイミングなので、表示を上書き更新する
+            turnText.text = $"{colorStr}の番";
+            
+            // デバッグ用（正しく呼ばれたか確認）
+            Debug.Log($"UpdateTurnText: {turnText.text}");
+        }
     }
-}
 
     void ShowResult()
     {
         string winner = "";
 
-        // GameManagerがある場合のみHP判定を行う
+        // GameManagerが存在する場合、HPによる判定を最優先で行う
         if (GameManager.Instance != null)
         {
-            if (GameManager.Instance.WhiteHP <= 0) winner = "黒の勝ち(KO)";
-            else if (GameManager.Instance.BlackHP <= 0) winner = "白の勝ち(KO)";
-            else if (GameManager.Instance.BlackHP > GameManager.Instance.WhiteHP) winner = "黒の勝ち(HP判定)";
-            else if (GameManager.Instance.WhiteHP > GameManager.Instance.BlackHP) winner = "白の勝ち(HP判定)";
-        }
+            int blackHP = GameManager.Instance.BlackHP;
+            int whiteHP = GameManager.Instance.WhiteHP;
 
-        // HP判定で勝敗が決まっていない（またはGameManagerがない）場合は枚数判定
-        if (string.IsNullOrEmpty(winner))
-        {
-            int blackCount = 0;
-            int whiteCount = 0;
-            foreach (int cell in board) {
-                if (cell == Black) blackCount++;
-                else if (cell == White) whiteCount++;
+            if (blackHP <= 0) 
+            {
+                winner = "白の完全勝利！";
             }
-            if (blackCount > whiteCount) winner = "黒の勝ち";
-            else if (whiteCount > blackCount) winner = "白の勝ち";
-            else winner = "引き分け";
+            else if (whiteHP <= 0) 
+            {
+                winner = "黒の完全勝利！";
+            }
+            else if (blackHP > whiteHP) 
+            {
+                winner = $"黒の判定勝ち！ (HP {blackHP} vs {whiteHP})";
+            }
+            else if (whiteHP > blackHP) 
+            {
+                winner = $"白の判定勝ち！ (HP {whiteHP} vs {blackHP})";
+            }
+            else 
+            {
+                // HPが全く同じだった場合は引き分け
+                winner = $"引き分け！ (両者 HP {blackHP})";
+            }
         }
-        
-        Debug.Log($"ゲーム終了！ {winner}");
+        else
+        {
+            // GameManagerがない（HPの概念がない）場合は枚数で判定
+            winner = GetWinnerByStoneCount();
+        }
 
-        // リザルト専用テキストがある場合、それを表示
+        // 画面中央のリザルトUIに表示
         if (resultText != null)
         {
             resultText.text = winner;
         }
 
-        // リザルトパネル（背景など）がある場合、それを活性化
+        // リザルトパネルを表示（ここでボタンなどのUIも一緒に出る）
         if (resultPanel != null)
         {
             resultPanel.SetActive(true);
         }
 
-        // 念のため、既存のturnTextにも表示
-        if (turnText != null) turnText.text = "GAME OVER";
+        isInputActive = false; 
+        Debug.Log($"ゲーム終了判定: {winner}");
+    }
 
-        isInputActive = false; // 操作不能にする
+    // 石の数で判定する補助関数（GameManagerがない場合のみ使用）
+    string GetWinnerByStoneCount()
+    {
+        int blackCount = 0;
+        int whiteCount = 0;
+        foreach (int cell in board) {
+            if (cell == Black) blackCount++;
+            else if (cell == White) whiteCount++;
+        }
+
+        if (blackCount > whiteCount) return $"黒の勝ち！({blackCount}枚)";
+        if (whiteCount > blackCount) return $"白の勝ち！({whiteCount}枚)";
+        return "引き分け";
     }
 }
